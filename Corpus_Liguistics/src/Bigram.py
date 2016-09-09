@@ -17,8 +17,7 @@ def main():
     for k, v in newmerator.items():
         probability_table[k] = newmerator.get(k)/denominator.get(k[1])
 
-    for k, v in probability_table.items():
-        print(k, v)
+    print_probility_table(probability_table)
 
     print("------------------------")
 
@@ -30,7 +29,10 @@ def main():
     newmerator = nltk.FreqDist(bigrm)
     denominator=nltk.FreqDist(token)
     num_of_items=len(token)
-    addOneSmoothing(newmerator,denominator,num_of_items)
+    probability_table = addOneSmoothing(newmerator,denominator,num_of_items)
+    print_probility_table(probability_table)
+    print("------------------------")
+    calculate_probability(probability_table,sen_list)
 
 
 def addOneSmoothing(newmerator,denominator,num_of_items):
@@ -38,8 +40,7 @@ def addOneSmoothing(newmerator,denominator,num_of_items):
     for k, v in newmerator.items():
         probability_table[k] = (newmerator.get(k)+1)/(denominator.get(k[1])+num_of_items)
 
-    for k, v in probability_table.items():
-        print(k, v)
+    return probability_table
 
 def sentence():
     str1 = "I do not like them in a mouse .\n"
@@ -50,9 +51,20 @@ def sentence():
 
     return sen_list
 
-def calculate_probability(sen_list):
-    
+def calculate_probability(probability_table,sen_list):
+    for x in sen_list:
+        token=nltk.word_tokenize(x)
+        bigrm = nltk.bigrams(token)
+        newmerator=nltk.FreqDist(bigrm)
+        cumulative_prob=1
+        for k,v in newmerator.items():
+            cumulative_prob*=probability_table.get(k)
 
+        print (cumulative_prob)
+
+def print_probility_table(probability_table):
+    for k, v in probability_table.items():
+        print(k, v)
 
 
 if __name__ == '__main__':
