@@ -8,42 +8,38 @@ def main():
     file.close()
 
     # First Problem
+    probability_table={}
     bigrm=nltk.bigrams(token)
-    f=nltk.FreqDist(bigrm)
-    total=0
-    for k,v in f.items():
-        total += v
+    newmerator=nltk.FreqDist(bigrm)
+    denominator=nltk.FreqDist(token)
 
-    total_prob = 0
-    for k, v in f.items():
-        print(k, v / total)
-        total_prob += v / total
+    total_prob = 1
+    for k, v in newmerator.items():
+        probability_table[k] = newmerator.get(k)/denominator.get(k[1])
 
-    print(total_prob)
+    for k, v in probability_table.items():
+        print(k, v)
+
+    print("------------------------")
 
     #Second Problem
     sen_list=sentence()
     token1=nltk.word_tokenize(''.join(sen_list))
     token=token+token1
     bigrm = nltk.bigrams(token)
+    newmerator = nltk.FreqDist(bigrm)
+    denominator=nltk.FreqDist(token)
+    num_of_items=len(token)
+    addOneSmoothing(newmerator,denominator,num_of_items)
 
-    f = nltk.FreqDist(bigrm)
-    addOneSmoothing(f)
 
+def addOneSmoothing(newmerator,denominator,num_of_items):
+    probability_table = {}
+    for k, v in newmerator.items():
+        probability_table[k] = (newmerator.get(k)+1)/(denominator.get(k[1])+num_of_items)
 
-def addOneSmoothing(f):
-    total = 0
-    for k, v in f.items():
-        v += 1
-        total += v
-
-    total_prob = 0
-
-    for k,v in f.items():
-        print (k,v/total)
-        total_prob += v/total
-
-    print(total_prob)
+    for k, v in probability_table.items():
+        print(k, v)
 
 def sentence():
     str1 = "I do not like them in a mouse .\n"
@@ -53,6 +49,9 @@ def sentence():
     sen_list = [str1,str2,str3,str4]
 
     return sen_list
+
+def calculate_probability(sen_list):
+    
 
 
 
