@@ -1,6 +1,5 @@
 import nltk
-import scipy
-import numpy
+import operator
 
 def bigram():
     file=open("../nonsense.txt","r")
@@ -8,15 +7,16 @@ def bigram():
     file.close()
 
     # First Problem
+    probability_table_without_smoothing = {}
     probability_table={}
     bigrm=nltk.bigrams(token)
     newmerator=nltk.FreqDist(bigrm)
     denominator=nltk.FreqDist(token)
 
     for k, v in newmerator.items():
-        probability_table[k] = newmerator.get(k)/denominator.get(k[1])
+        probability_table_without_smoothing[k] = newmerator.get(k)/denominator.get(k[1])
 
-    print_probility_table(probability_table)
+    print_probility_table(probability_table_without_smoothing)
 
     print("------------------------")
 
@@ -32,6 +32,8 @@ def bigram():
     print_probility_table(probability_table)
     print("------------------------")
     calculate_probability(probability_table,sen_list,"bigram")
+
+    return probability_table_without_smoothing
 
 
 def addOneSmoothing(newmerator,denominator,num_of_items):
@@ -97,8 +99,28 @@ def trigram():
     print("------------------------")
     calculate_probability(probability_table, sen_list,"trigram")
 
+    return probability_table
+
+def sentence_generator(probability_table):
+    relational_probability={}
+    for k,v in probability_table.items():
+        x = k[0]
+        if x not in relational_probability:
+            relational_probability[x]={}
+        d = relational_probability[x]
+        d[k[1]]=v
+        relational_probability[x]=d
+        #print(k,v)
+    print("------------------------")
+    for k,v in relational_probability.items():
+        sorted_v = sorted(v.items(), key=operator.itemgetter(1))
+        relational_probability[k] = sorted_v
+    print_probility_table(relational_probability)
+
 
 if __name__ == '__main__':
-    bigram()
+    probability_table= bigram()
     print("------------------------")
-    trigram()
+    #trigram()
+    #print("------------------------")
+    sentence_generator(probability_table)
