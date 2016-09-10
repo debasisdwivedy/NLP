@@ -101,21 +101,37 @@ def trigram():
 
     return probability_table
 
-def sentence_generator(probability_table):
+def create_relational_probability_table(probability_table):
     relational_probability={}
     for k,v in probability_table.items():
         x = k[0]
         if x not in relational_probability:
-            relational_probability[x]={}
+            relational_probability[x] = {}
+        d = {}
         d = relational_probability[x]
-        d[k[1]]=v
+        if k[1] in d:
+            d[k[1]].append(v)
+        else:
+            d[k[1]] = v
         relational_probability[x]=d
         #print(k,v)
     print("------------------------")
-    for k,v in relational_probability.items():
-        sorted_v = sorted(v.items(), key=operator.itemgetter(1))
+    print(type(relational_probability))
+    for k, v in relational_probability.items():
+        new_dict={}
+        for k1, v1 in v.items():
+            new_dict.setdefault(v1, []).append(k1)
+        v=new_dict
+        sorted_v = sorted(v.items(), key=operator.itemgetter(0), reverse=True)
         relational_probability[k] = sorted_v
     print_probility_table(relational_probability)
+    #sentence_generator(relational_probability)
+
+def sentence_generator(relational_probability):
+    v=relational_probability.get("s")
+    print(v[0][1])
+    print(type(v[0]))
+
 
 
 if __name__ == '__main__':
@@ -123,4 +139,4 @@ if __name__ == '__main__':
     print("------------------------")
     #trigram()
     #print("------------------------")
-    sentence_generator(probability_table)
+    create_relational_probability_table(probability_table)
