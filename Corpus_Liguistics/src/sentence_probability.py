@@ -1,5 +1,6 @@
 import nltk
 import operator
+import random
 
 def bigram():
     file=open("../nonsense.txt","r")
@@ -116,7 +117,7 @@ def create_relational_probability_table(probability_table):
         relational_probability[x]=d
         #print(k,v)
     print("------------------------")
-    print(type(relational_probability))
+
     for k, v in relational_probability.items():
         new_dict={}
         for k1, v1 in v.items():
@@ -124,13 +125,21 @@ def create_relational_probability_table(probability_table):
         v=new_dict
         sorted_v = sorted(v.items(), key=operator.itemgetter(0), reverse=True)
         relational_probability[k] = sorted_v
-    print_probility_table(relational_probability)
-    #sentence_generator(relational_probability)
+    #print_probility_table(relational_probability)
+    sentence_generator(relational_probability)
 
 def sentence_generator(relational_probability):
-    v=relational_probability.get("s")
-    print(v[0][1])
-    print(type(v[0]))
+    str = ""
+    temp_str = "s"
+    #v = relational_probability.get("s")
+    #print(v[0][1])
+    while temp_str != "/s":
+        v = relational_probability.get(temp_str)[0][1]
+        temp_str = random.choice(v).strip()
+        #print(temp_str)
+        if temp_str != "/s":
+            str += temp_str+" "
+    print(str)
 
 
 
