@@ -17,9 +17,8 @@ def bigram():
     for k, v in newmerator.items():
         probability_table_without_smoothing[k] = newmerator.get(k)/denominator.get(k[1])
 
+    print("----------Bigram without smoothing----------")
     print_probility_table(probability_table_without_smoothing)
-
-    print("------------------------")
 
     #Second Problem
     sen_list=sentence()
@@ -30,8 +29,9 @@ def bigram():
     denominator=nltk.FreqDist(token)
     num_of_items=len(token)
     probability_table = addOneSmoothing(newmerator,denominator,num_of_items)
+    print("----------Bigram with smoothing----------")
     print_probility_table(probability_table)
-    print("------------------------")
+    print("----------Sentence probability Bigram with smoothing----------")
     calculate_probability(probability_table,sen_list,"bigram")
 
     return probability_table_without_smoothing
@@ -85,8 +85,9 @@ def trigram():
     for k, v in newmerator.items():
         probability_table[k] = newmerator.get(k) / denominator.get(k[1])
 
+    print("----------Trigram without smoothing----------")
     print_probility_table(probability_table)
-    print("------------------------")
+
     # Second Problem
     sen_list = sentence()
     token1 = nltk.word_tokenize(''.join(sen_list))
@@ -96,8 +97,9 @@ def trigram():
     denominator = nltk.FreqDist(token)
     num_of_items = len(token)
     probability_table = addOneSmoothing(newmerator, denominator, num_of_items)
+    print("----------Sentence probability Trigram with smoothing----------")
     print_probility_table(probability_table)
-    print("------------------------")
+    print("----------Sentence probability Trigram with smoothing----------")
     calculate_probability(probability_table, sen_list,"trigram")
 
     return probability_table
@@ -115,8 +117,6 @@ def create_relational_probability_table(probability_table):
         else:
             d[k[1]] = v
         relational_probability[x]=d
-        #print(k,v)
-    print("------------------------")
 
     for k, v in relational_probability.items():
         new_dict={}
@@ -125,7 +125,7 @@ def create_relational_probability_table(probability_table):
         v=new_dict
         sorted_v = sorted(v.items(), key=operator.itemgetter(0), reverse=True)
         relational_probability[k] = sorted_v
-    #print_probility_table(relational_probability)
+
     sentence_generator(relational_probability)
 
 def sentence_generator(relational_probability):
@@ -139,13 +139,13 @@ def sentence_generator(relational_probability):
         #print(temp_str)
         if temp_str != "/s":
             str += temp_str+" "
+
+    print("-----------Random sentence from bigram model without smoothing-------------")
     print(str)
 
 
 
 if __name__ == '__main__':
     probability_table= bigram()
-    print("------------------------")
-    #trigram()
-    #print("------------------------")
+    trigram()
     create_relational_probability_table(probability_table)
