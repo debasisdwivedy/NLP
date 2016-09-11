@@ -97,7 +97,7 @@ def trigram():
     denominator = nltk.FreqDist(token)
     num_of_items = len(token)
     probability_table = addOneSmoothing(newmerator, denominator, num_of_items)
-    print("----------Sentence probability Trigram with smoothing----------")
+    print("----------Trigram with smoothing----------")
     print_probility_table(probability_table)
     print("----------Sentence probability Trigram with smoothing----------")
     calculate_probability(probability_table, sen_list,"trigram")
