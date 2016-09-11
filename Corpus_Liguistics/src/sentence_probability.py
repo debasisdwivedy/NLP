@@ -1,9 +1,11 @@
+from __future__ import division
 import nltk
 import operator
 import random
+import sys
 
-def bigram():
-    file=open("../nonsense.txt","r")
+def bigram(input_file):
+    file=open(input_file,"r")
     token = nltk.word_tokenize(file.read())
     file.close()
 
@@ -71,8 +73,8 @@ def print_probility_table(probability_table):
     for k, v in probability_table.items():
         print(k, v)
 
-def trigram():
-    file = open("../nonsense.txt", "r")
+def trigram(input_file):
+    file = open(input_file, "r")
     token = nltk.word_tokenize(file.read())
     file.close()
 
@@ -104,7 +106,7 @@ def trigram():
 
     return probability_table
 
-def create_relational_probability_table(probability_table):
+def create_relational_probability_table(probability_table,start_tag,end_tag):
     relational_probability={}
     for k,v in probability_table.items():
         x = k[0]
@@ -126,18 +128,18 @@ def create_relational_probability_table(probability_table):
         sorted_v = sorted(v.items(), key=operator.itemgetter(0), reverse=True)
         relational_probability[k] = sorted_v
 
-    sentence_generator(relational_probability)
+    sentence_generator(relational_probability,start_tag,end_tag)
 
-def sentence_generator(relational_probability):
+def sentence_generator(relational_probability,start_tag,end_tag):
     str = ""
-    temp_str = "s"
+    temp_str = start_tag
     #v = relational_probability.get("s")
     #print(v[0][1])
-    while temp_str != "/s":
+    while temp_str != end_tag:
         v = relational_probability.get(temp_str)[0][1]
         temp_str = random.choice(v).strip()
         #print(temp_str)
-        if temp_str != "/s":
+        if temp_str != end_tag:
             str += temp_str+" "
 
     print("-----------Random sentence from bigram model without smoothing-------------")
@@ -146,6 +148,10 @@ def sentence_generator(relational_probability):
 
 
 if __name__ == '__main__':
-    probability_table= bigram()
-    trigram()
-    create_relational_probability_table(probability_table)
+    input_file=sys.argv[1]
+    start_tag=sys.argv[2]
+    end_tag=sys.argv[3]
+
+    probability_table= bigram(input_file)
+    trigram(input_file)
+    create_relational_probability_table(probability_table,start_tag,end_tag)
