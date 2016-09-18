@@ -1,4 +1,4 @@
-import nltk,sys,random
+import nltk,sys,random,math
 from operator import itemgetter
 
 def words(text):
@@ -116,14 +116,47 @@ def exercise1_5(text):
     sorted_f=sorted(f.items(),key=itemgetter(1),reverse=True)
     listCollocations(sorted_f,w)
 
-def exercise1_7(text):
-    
+def exercise1_7(text,word_of_interest,n):
+    tokens = words(text)
+
+    n_gram_list=get_n_gram(tokens,n)
+    context=concordance(n_gram_list,word_of_interest,n)
+    for c in context:
+        print (c)
+
+def get_n_gram(tokens,n):
+    ls=[]
+    length=len(tokens)
+    for i in range(0,length):
+        sublist = tokens[i:i+n]
+        ls.append(sublist)
+
+    return ls
+
+def concordance(ls, word_of_interest,n):
+    print(word_of_interest)
+    context=[]
+    for l in ls:
+        x = math.floor(n/2)
+        if l.__contains__(word_of_interest) and l.index(word_of_interest) == x :
+            context.append(l)
+
+    return context
+
+
 
 if __name__=='__main__':
     path=sys.argv[1]
+    kwic_file=sys.argv[2]
     file = open(path,mode='r',encoding='utf-8')
     text = file.read()
     file.close()
     #exercise1_2(text.strip('\n\t'))
     #exercise1_4(100000)
     exercise1_5(text.strip('\n\t'))
+    file=open(kwic_file,mode='r',encoding='utf-8')
+    text=file.read()
+    file.close()
+    word_of_interest='germany'
+    size_of_context=3
+    exercise1_7(text.strip('\n\t').lower(),word_of_interest,size_of_context)
